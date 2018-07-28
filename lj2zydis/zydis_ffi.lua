@@ -24,6 +24,7 @@ enum ZydisFeatures
 ]]
 
 
+
 ffi.cdef[[
 ZydisBool ZydisIsFeatureEnabled(ZydisFeature feature);
 ZydisU64 ZydisGetVersion(void);
@@ -35,6 +36,8 @@ local ZydisLib = ffi.load("zydis");
 
 local exports = {
     Lib = ZydisLib;
+
+    ZYDIS_VERSION = 0x0002000000020000ULL;
 
     ZydisGetVersion = ZydisLib.ZydisGetVersion;
 }
