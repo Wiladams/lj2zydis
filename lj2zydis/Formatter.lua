@@ -504,106 +504,30 @@ struct ZydisFormatter_
 /* Exported functions                                                                             */
 /* ============================================================================================== */
 
-/**
- * @brief   Initializes the given `ZydisFormatter` instance.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   style       The formatter style.
- *
- * @return  A zydis status code.
- */
+
  ZydisStatus ZydisFormatterInit(ZydisFormatter* formatter, ZydisFormatterStyle style);
 
-/**
- * @brief   Sets the value of the specified formatter `attribute`.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   property    The id of the formatter-property.
- * @param   value       The new value.
- *
- * @return  A zydis status code.
- */
+
  ZydisStatus ZydisFormatterSetProperty(ZydisFormatter* formatter,
     ZydisFormatterProperty property, ZydisUPointer value);
 
-/**
- * @brief   Replaces a formatter function with a custom callback and/or retrieves the currently
- *          used function.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   hook        The formatter hook-type.
- * @param   callback    A pointer to a variable that contains the pointer of the callback function
- *                      and receives the pointer of the currently used function.
- *
- * @return  A zydis status code.
- *
- * Call this function with `callback` pointing to a `NULL` value to retrieve the currently used
- * function without replacing it.
- */
+
  ZydisStatus ZydisFormatterSetHook(ZydisFormatter* formatter,
     ZydisFormatterHookType hook, const void** callback);
 
-/**
- * @brief   Formats the given instruction and writes it into the output buffer.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
- * @param   buffer      A pointer to the output buffer.
- * @param   bufferLen   The length of the output buffer.
- *
- * @return  A zydis status code.
- */
+
  ZydisStatus ZydisFormatterFormatInstruction(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, char* buffer, ZydisUSize bufferLen);
 
-/**
- * @brief   Formats the given instruction and writes it into the output buffer.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
- * @param   buffer      A pointer to the output buffer.
- * @param   bufferLen   The length of the output buffer.
- * @param   userData    A pointer to user-defined data which can be used in custom formatter
- *                      callbacks.
- *
- * @return  A zydis status code.
- */
+
  ZydisStatus ZydisFormatterFormatInstructionEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, char* buffer, ZydisUSize bufferLen, void* userData);
 
-/**
- * @brief   Formats the given operand and writes it into the output buffer.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
- * @param   index       The index of the operand to format.
- * @param   buffer      A pointer to the output buffer.
- * @param   bufferLen   The length of the output buffer.
- *
- * @return  A zydis status code.
- *
- * Use `ZydisFormatterFormatInstruction` or `ZydisFormatterFormatInstructionEx` to format a
- * complete instruction.
- */
+
  ZydisStatus ZydisFormatterFormatOperand(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZydisU8 index, char* buffer, ZydisUSize bufferLen);
 
-/**
- * @brief   Formats the given operand and writes it into the output buffer.
- *
- * @param   formatter   A pointer to the `ZydisFormatter` instance.
- * @param   instruction A pointer to the `ZydisDecodedInstruction` struct.
- * @param   index       The index of the operand to format.
- * @param   buffer      A pointer to the output buffer.
- * @param   bufferLen   The length of the output buffer.
- * @param   userData    A pointer to user-defined data which can be used in custom formatter
- *                      callbacks.
- *
- * @return  A zydis status code.
- *
- * Use `ZydisFormatterFormatInstruction` or `ZydisFormatterFormatInstructionEx` to format a
- * complete instruction.
- */
+
  ZydisStatus ZydisFormatterFormatOperandEx(const ZydisFormatter* formatter,
     const ZydisDecodedInstruction* instruction, ZydisU8 index, char* buffer, ZydisUSize bufferLen,
     void* userData);

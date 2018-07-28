@@ -40,6 +40,20 @@ local exports = {
     ZYDIS_VERSION = 0x0002000000020000ULL;
 
     ZydisGetVersion = ZydisLib.ZydisGetVersion;
+
+    -- Decoder
+    ZydisDecoderInit = ZydisLib.ZydisDecoderInit;
+    ZydisDecoderEnableMode = ZydisLib.ZydisDecoderEnableMode;
+    ZydisDecoderDecodeBuffer = ZydisLib.ZydisDecoderDecodeBuffer;
+
+    -- Formatter
+    ZydisFormatterInit = ZydisLib.ZydisFormatterInit;
+    ZydisFormatterSetProperty = ZydisLib.ZydisFormatterSetProperty;
+    ZydisFormatterSetHook = ZydisLib.ZydisFormatterSetHook;
+    ZydisFormatterFormatInstruction = ZydisLib.ZydisFormatterFormatInstruction;
+    ZydisFormatterFormatInstructionEx = ZydisLib.ZydisFormatterFormatInstructionEx;
+    ZydisFormatterFormatOperand = ZydisLib.ZydisFormatterFormatOperand;
+    ZydisFormatterFormatOperandEx = ZydisLib.ZydisFormatterFormatOperandEx;
 }
 
 return exports
