@@ -36,7 +36,6 @@ ffi.cdef[[
 ffi.cdef[[
 ZydisStatus ZydisDecoderInit(ZydisDecoder* decoder, ZydisMachineMode machineMode, ZydisAddressWidth addressWidth);
 ZydisStatus ZydisDecoderEnableMode(ZydisDecoder* decoder, ZydisDecoderMode mode, ZydisBool enabled);
-
 ZydisStatus ZydisDecoderDecodeBuffer(const ZydisDecoder* decoder, const void* buffer, ZydisUSize bufferLen, ZydisU64 instructionPointer, ZydisDecodedInstruction* instruction);
 ]]
 

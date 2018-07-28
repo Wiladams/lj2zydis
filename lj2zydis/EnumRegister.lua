@@ -288,13 +288,9 @@ enum ZydisRegisters
     ZYDIS_REGISTER_PKRU,
     ZYDIS_REGISTER_XCR0,
 
-    /**
-     * @brief   Maximum value of this enum.
-     */
+
     ZYDIS_REGISTER_MAX_VALUE = ZYDIS_REGISTER_XCR0,
-    /**
-     * @brief   Minimum amount of bits required to store a value of this enum.
-     */
+
     ZYDIS_REGISTER_MIN_BITS  = 0x0008
 };
 ]]
