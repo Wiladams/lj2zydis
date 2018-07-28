@@ -1,10 +1,13 @@
 local ffi = require("ffi")
 
-ffi.cdef[[
-typedef ZydisU16 ZydisMnemonic;
-]]
+require("lj2zydis.CommonTypes")
 
---[=[
+ffi.cdef[[
+/**
+ * @brief   Defines the `ZydisMnemonic` datatype.
+ */
+typedef ZydisU16 ZydisMnemonic;
+
 /**
  * @brief   Values that represent `ZydisMnemonic` elements.
  */
@@ -1603,4 +1606,4 @@ enum ZydisMnemonics
      */
     ZYDIS_MNEMONIC_MIN_BITS  = 0x000B
 };
---]=]
+]]
