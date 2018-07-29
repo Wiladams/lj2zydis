@@ -3,6 +3,6 @@ package.path = "../?.lua;"..package.path
 local ffi = require("ffi")
 local bit = require("bit")
 
-local zydis = require("lj2zydis.zydis_ffi")
+local zydis = require("lj2zydis.zydis")
 
-print(bit.tohex(zydis.ZydisGetVersion()))
+print("Version: ",bit.tohex(zydis.ZydisGetVersion()))
