@@ -147,7 +147,9 @@ typedef ZydisStatus (*ZydisFormatterAddressFunc)(const ZydisFormatter* formatter
 typedef ZydisStatus (*ZydisFormatterDecoratorFunc)(const ZydisFormatter* formatter,
     ZydisString* string, const ZydisDecodedInstruction* instruction,
     const ZydisDecodedOperand* operand, ZydisDecoratorType decorator, void* userData);
+]]
 
+ffi.cdef[[
 
 struct ZydisFormatter_
 {
@@ -183,10 +185,10 @@ struct ZydisFormatter_
     ZydisFormatterFunc funcPrintPrefixes;
     ZydisFormatterDecoratorFunc funcPrintDecorator;
 };
+]]
 
 
-
-
+ffi.cdef[[
  ZydisStatus ZydisFormatterInit(ZydisFormatter* formatter, ZydisFormatterStyle style);
 
 
@@ -214,5 +216,6 @@ struct ZydisFormatter_
     const ZydisDecodedInstruction* instruction, ZydisU8 index, char* buffer, ZydisUSize bufferLen,
     void* userData);
 ]]
+
 
 

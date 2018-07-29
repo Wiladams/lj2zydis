@@ -27,29 +27,22 @@ local data = ffi.new("uint8_t[25]",
 
 local function main()
 
-    local decoder = ffi.new("ZydisDecoder");
-    local err = zydis.ZydisDecoderInit(decoder, ffi.C.ZYDIS_MACHINE_MODE_LONG_64, ffi.C.ZYDIS_ADDRESS_WIDTH_64)
-
-
-    local formatter = ffi.new("ZydisFormatter");
-    local err = zydis.ZydisFormatterInit(formatter, ffi.C.ZYDIS_FORMATTER_STYLE_INTEL)
-    
+    local decoder = zydis.ZydisDecoder(ffi.C.ZYDIS_MACHINE_MODE_LONG_64, ffi.C.ZYDIS_ADDRESS_WIDTH_64);   -- ffi.new("ZydisDecoder");
+    local formatter = zydis.ZydisFormatter();
+     
     local offset = 0
     local length = sizeOfCode;
     local instructionPointer = 0x007FFFFFFF400000ULL;
     local instruction = ffi.new("ZydisDecodedInstruction");
     local buffer = ffi.new("uint8_t[256]");
 
-    while (zydis.ZydisDecoderDecodeBuffer(
-        decoder, data + offset, length - offset,
-        instructionPointer, instruction) == 0) do
-        
+    while (decoder:DecodeBuffer(data + offset, length - offset,instructionPointer, instruction)) do
         -- Print current instruction pointer.
         io.write(string.format("0x%s  ", bit.tohex(instructionPointer)));
 
         -- Format & print the binary instruction
         -- structure to human readable format.
-        zydis.ZydisFormatterFormatInstruction(formatter, instruction, buffer, 256);
+        formatter:FormatInstruction(instruction, buffer, 256);
         print(ffi.string(buffer));
 
         offset = offset+instruction.length;
