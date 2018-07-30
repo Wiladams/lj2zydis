@@ -10,10 +10,12 @@ package.path = "../?.lua;"..package.path
 local ffi = require("ffi")
 local bit = require("bit")
 
+local namespace = require("lj2zydis.namespace")()
+
 local zydis = require("lj2zydis.zydis")
 local enum = require("lj2zydis.enum")
-enum.inject(zydis)
---enum.inject(zydis.Status)
+enum.inject(zydis, namespace)
+
 
 local operandTypes = enum
 {
@@ -102,14 +104,14 @@ local memopTypes = enum {
     "AGEN",
     "MIB"
 };
---[=[
+
 --[[
 /* ============================================================================================== */
 /* Helper functions                                                                               */
 /* ============================================================================================== */
 --]]
 
-local function ZydisFormatStatus(ZydisStatus status)
+local function ZydisFormatStatus(status)
 
     local strings =
     {
@@ -131,7 +133,6 @@ local function ZydisFormatStatus(ZydisStatus status)
         "IMPOSSIBLE_INSTRUCTION",
         "INSUFFICIENT_BUFFER_SIZE"
     };
-    --assert(status < ZYDIS_ARRAY_SIZE(strings));
     
     return strings[status];
 end
@@ -148,7 +149,7 @@ local function printf(fmt, ...)
     io.write(string.format(fmt,...))
     return true;
 end
-
+--[=[
 local function printOperands(instruction)
 
     fputs("== [ OPERANDS ] =====================================================", stdout);
@@ -221,6 +222,7 @@ local function printOperands(instruction)
     fputs("--  ---------  ----------  ------  ------------   ----  -----  ------", stdout);
     fputs("  --------  ---------------------------\n", stdout);
 end
+--]=]
 
 local function printFlags(instruction)
 
@@ -278,7 +280,12 @@ local function printFlags(instruction)
             printf("[%-4s: %s] ", flagNames[i], flagActions[instruction.accessedFlags[i].action]);
         }
     }
-    puts(c ? "" : "none");
+    if c > 0 then
+        puts("")
+    else
+        puts("none")
+    end
+
 
     ZydisCPUFlagMask flags, temp;
     ZydisGetAccessedFlagsByAction(instruction, ZYDIS_CPUFLAG_ACTION_TESTED, &flags);
@@ -293,6 +300,7 @@ local function printFlags(instruction)
     printf("  UNDEFINED: 0x%08" PRIX32 "\n", flags);
 end
 
+--[=[
 local function printAVXInfo(instruction)
 
     local broadcastStrings =
@@ -586,11 +594,11 @@ local function main()
         return ZYDIS_STATUS_INVALID_OPERATION;
     end
 
-    if (argc < 3)
-    {
+    if argc < 2 then
+    
         fputs("Usage: ZydisInfo -[real|16|32|64] [hexbytes]\n", stderr);
         return ZYDIS_STATUS_INVALID_PARAMETER;
-    }
+    end
 --[=[
     ZydisDecoder decoder;
     if (!strcmp(argv[1], "-real"))
