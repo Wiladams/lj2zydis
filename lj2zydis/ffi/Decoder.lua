@@ -1,8 +1,8 @@
 local ffi = require("ffi")
 
-require("lj2zydis.CommonTypes")
-require("lj2zydis.DecoderTypes")
-require("lj2zydis.Status")
+require("lj2zydis.ffi.CommonTypes")
+require("lj2zydis.ffi.DecoderTypes")
+require("lj2zydis.ffi.Status")
 
 ffi.cdef[[
 typedef ZydisU8 ZydisDecoderMode;

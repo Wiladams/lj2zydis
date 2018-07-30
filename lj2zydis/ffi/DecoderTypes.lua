@@ -1,10 +1,10 @@
 local ffi = require("ffi")
 
-require("lj2zydis.CommonTypes")
-require("lj2zydis.MetaInfo")
-require("lj2zydis.Mnemonic")
-require("lj2zydis.Register")
-require("lj2zydis.SharedTypes")
+require("lj2zydis.ffi.CommonTypes")
+require("lj2zydis.ffi.MetaInfo")
+require("lj2zydis.ffi.Mnemonic")
+require("lj2zydis.ffi.Register")
+require("lj2zydis.ffi.SharedTypes")
 
 ffi.cdef[[
 typedef ZydisU8 ZydisMemoryOperandType;

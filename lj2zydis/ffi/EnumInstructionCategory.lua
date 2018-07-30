@@ -1,6 +1,6 @@
 local ffi = require("ffi")
 
-require("lj2zydis.CommonTypes")
+require("lj2zydis.ffi.CommonTypes")
 
 ffi.cdef[[
 typedef ZydisU8 ZydisInstructionCategory;

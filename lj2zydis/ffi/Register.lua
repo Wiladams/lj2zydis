@@ -1,8 +1,8 @@
 local ffi = require("ffi")
 
---#include <Zydis/String.h>
-require("lj2zydis.CommonTypes")
-require("lj2zydis.EnumRegister")
+require("lj2zydis.ffi.String")
+require("lj2zydis.ffi.CommonTypes")
+require("lj2zydis.ffi.EnumRegister")
 
 
 ffi.cdef[[

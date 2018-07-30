@@ -1,16 +1,16 @@
 local ffi = require("ffi")
 
-require("lj2zydis.CommonTypes")
-require("lj2zydis.Decoder")
-require("lj2zydis.DecoderTypes")
-require("lj2zydis.Formatter")
-require("lj2zydis.MetaInfo")
-require("lj2zydis.Mnemonic")
-require("lj2zydis.Register")
-require("lj2zydis.SharedTypes")
-require("lj2zydis.Status")
-require("lj2zydis.String")
-require("lj2zydis.Utils")
+require("lj2zydis.ffi.CommonTypes")
+require("lj2zydis.ffi.Decoder")
+require("lj2zydis.ffi.DecoderTypes")
+require("lj2zydis.ffi.Formatter")
+require("lj2zydis.ffi.MetaInfo")
+require("lj2zydis.ffi.Mnemonic")
+require("lj2zydis.ffi.Register")
+require("lj2zydis.ffi.SharedTypes")
+require("lj2zydis.ffi.Status")
+require("lj2zydis.ffi.String")
+require("lj2zydis.ffi.Utils")
 
 
 ffi.cdef[[

@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 
-require("lj2zydis.Status")
-require("lj2zydis.DecoderTypes")
+require("lj2zydis.ffi.Status")
+require("lj2zydis.ffi.DecoderTypes")
 
 ffi.cdef[[
 

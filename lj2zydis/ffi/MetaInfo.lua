@@ -2,11 +2,11 @@
 local ffi = require("ffi")
 
 
-require("lj2zydis.CommonTypes")
+require("lj2zydis.ffi.CommonTypes")
 
-require("lj2zydis.EnumInstructionCategory")
-require("lj2zydis.EnumISASet")
-require("lj2zydis.EnumISAExt")
+require("lj2zydis.ffi.EnumInstructionCategory")
+require("lj2zydis.ffi.EnumISASet")
+require("lj2zydis.ffi.EnumISAExt")
 
 ffi.cdef[[
 const char* ZydisCategoryGetString(ZydisInstructionCategory category);

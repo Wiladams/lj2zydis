@@ -2,8 +2,8 @@
 local ffi = require("ffi")
 
 
-require("lj2zydis.CommonTypes")
-require("lj2zydis.Status")
+require("lj2zydis.ffi.CommonTypes")
+require("lj2zydis.ffi.Status")
 --require("lj2zydis.LibC.h>
 
 
