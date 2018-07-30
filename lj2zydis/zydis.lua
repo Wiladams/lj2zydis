@@ -48,7 +48,15 @@ local ZydisDecoder_mt = {
     __index = {
         DecodeBuffer = function(self, buffer, bufferLen, instructionPointer, instruction)
             return ZydisLib.ZydisDecoderDecodeBuffer(self, buffer, bufferLen, instructionPointer, instruction) == 0;
-        end
+        end;
+
+        EnableMode = function(self, mode, enabled)
+            mode = mode or ffi.C.ZYDIS_DECODER_MODE_MINIMAL;
+            local able = 1;
+            if not enabled then able = 0 end
+
+            return ZydisLib.ZydisDecoderEnableMode(self, mode, able) == 0;
+        end;
     };
 }
 ffi.metatype(ffi.typeof("ZydisDecoder"), ZydisDecoder_mt);
