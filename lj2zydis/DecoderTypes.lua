@@ -154,252 +154,106 @@ typedef ZydisU64 ZydisInstructionAttributes;
 --   The instruction has the ModRM byte.
 local ZYDIS_INSTRUCTION_ATTRIBUTE = {
 ZYDIS_ATTRIB_HAS_MODRM                =  0x0000000000000001ULL; -- (1 <<  0)
-
  ZYDIS_ATTRIB_HAS_SIB                    = 0x0000000000000002; --(1 <<  1)
-
  ZYDIS_ATTRIB_HAS_REX                    = 0x0000000000000004; --(1 <<  2)
-
  ZYDIS_ATTRIB_HAS_XOP                    = 0x0000000000000008; --(1 <<  3)
-
  ZYDIS_ATTRIB_HAS_VEX                    = 0x0000000000000010; --(1 <<  4)
-
  ZYDIS_ATTRIB_HAS_EVEX                   = 0x0000000000000020; --(1 <<  5)
-
  ZYDIS_ATTRIB_HAS_MVEX                   = 0x0000000000000040; --(1 <<  6)
-
  ZYDIS_ATTRIB_IS_RELATIVE                = 0x0000000000000080; --(1 <<  7)
-
  ZYDIS_ATTRIB_IS_PRIVILEGED              = 0x0000000000000100; --(1 <<  8)
-
  ZYDIS_ATTRIB_IS_FAR_BRANCH              = 0x0000001000000000; --(1 << 36);
-
  ZYDIS_ATTRIB_ACCEPTS_LOCK               = 0x0000000000000200; --(1 <<  9)
-
  ZYDIS_ATTRIB_ACCEPTS_REP                = 0x0000000000000400; --(1 << 10)
-
  ZYDIS_ATTRIB_ACCEPTS_REPE               = 0x0000000000000800; --(1 << 11)
-
  ZYDIS_ATTRIB_ACCEPTS_REPZ               = 0x0000000000000800; --(1 << 11)
-
  ZYDIS_ATTRIB_ACCEPTS_REPNE              = 0x0000000000001000; --(1 << 12)
-
  ZYDIS_ATTRIB_ACCEPTS_REPNZ              = 0x0000000000001000; --(1 << 12)
-
  ZYDIS_ATTRIB_ACCEPTS_BOUND              = 0x0000000000002000; --(1 << 13)
-
  ZYDIS_ATTRIB_ACCEPTS_XACQUIRE           = 0x0000000000004000; --(1 << 14)
-
  ZYDIS_ATTRIB_ACCEPTS_XRELEASE           = 0x0000000000008000; --(1 << 15)
-
  ZYDIS_ATTRIB_ACCEPTS_HLE_WITHOUT_LOCK   = 0x0000000000010000; --(1 << 16)
-
  ZYDIS_ATTRIB_ACCEPTS_BRANCH_HINTS       = 0x0000000000020000; --(1 << 17)
-
  ZYDIS_ATTRIB_ACCEPTS_SEGMENT            = 0x0000000000040000; --(1 << 18)
-
  ZYDIS_ATTRIB_HAS_LOCK                   = 0x0000000000080000; --(1 << 19)
-
  ZYDIS_ATTRIB_HAS_REP                    = 0x0000000000100000; --(1 << 20)
-
  ZYDIS_ATTRIB_HAS_REPE                   = 0x0000000000200000; --(1 << 21)
-
  ZYDIS_ATTRIB_HAS_REPZ                   = 0x0000000000200000; --(1 << 21)
-
  ZYDIS_ATTRIB_HAS_REPNE                  = 0x0000000000400000; --(1 << 22)
-
  ZYDIS_ATTRIB_HAS_REPNZ                  = 0x0000000000400000; --(1 << 22)
-
  ZYDIS_ATTRIB_HAS_BOUND                  = 0x0000000000800000; --(1 << 23)
-
  ZYDIS_ATTRIB_HAS_XACQUIRE               = 0x0000000001000000; --(1 << 24)
-
  ZYDIS_ATTRIB_HAS_XRELEASE               = 0x0000000002000000; --(1 << 25)
-
  ZYDIS_ATTRIB_HAS_BRANCH_NOT_TAKEN       = 0x0000000004000000; --(1 << 26)
-
  ZYDIS_ATTRIB_HAS_BRANCH_TAKEN           = 0x0000000008000000; --(1 << 27)
-
  ZYDIS_ATTRIB_HAS_SEGMENT                = 0x00000003F0000000;
-
  ZYDIS_ATTRIB_HAS_SEGMENT_CS             = 0x0000000010000000; --(1 << 28)
-
  ZYDIS_ATTRIB_HAS_SEGMENT_SS             = 0x0000000020000000; --(1 << 29)
-
  ZYDIS_ATTRIB_HAS_SEGMENT_DS             = 0x0000000040000000; --(1 << 30)
-
  ZYDIS_ATTRIB_HAS_SEGMENT_ES             = 0x0000000080000000; --(1 << 31)
-
  ZYDIS_ATTRIB_HAS_SEGMENT_FS             = 0x0000000100000000; --(1 << 32)
-
  ZYDIS_ATTRIB_HAS_SEGMENT_GS             = 0x0000000200000000; --(1 << 33)
-
  ZYDIS_ATTRIB_HAS_OPERANDSIZE            = 0x0000000400000000; --(1 << 34);
-
  ZYDIS_ATTRIB_HAS_ADDRESSSIZE            = 0x0000000800000000; --(1 << 35);
 }
 
 ffi.cdef[[
-
 typedef ZydisU8 ZydisCPUFlag;
 
-/**
- * @brief   Defines the @c ZydisCPUFlagMask datatype.
- */
 typedef ZydisU32 ZydisCPUFlagMask;
 
-/**
- * @brief   Values that represent CPU-flags.
- */
+
 enum ZydisCPUFlags
 {
-    /**
-     * @brief   Carry flag.
-     */
     ZYDIS_CPUFLAG_CF,
-    /**
-     * @brief   Parity flag.
-     */
     ZYDIS_CPUFLAG_PF,
-    /**
-     * @brief   Adjust flag.
-     */
     ZYDIS_CPUFLAG_AF,
-    /**
-     * @brief   Zero flag.
-     */
     ZYDIS_CPUFLAG_ZF,
-    /**
-     * @brief   Sign flag.
-     */
     ZYDIS_CPUFLAG_SF,
-    /**
-     * @brief   Trap flag.
-     */
     ZYDIS_CPUFLAG_TF,
-    /**
-     * @brief   Interrupt enable flag.
-     */
     ZYDIS_CPUFLAG_IF,
-    /**
-     * @brief   Direction flag.
-     */
     ZYDIS_CPUFLAG_DF,
-    /**
-     * @brief   Overflow flag.
-     */
     ZYDIS_CPUFLAG_OF,
-    /**
-     * @brief   I/O privilege level flag.
-     */
     ZYDIS_CPUFLAG_IOPL,
-    /**
-     * @brief   Nested task flag.
-     */
     ZYDIS_CPUFLAG_NT,
-    /**
-     * @brief   Resume flag.
-     */
     ZYDIS_CPUFLAG_RF,
-    /**
-     * @brief   Virtual 8086 mode flag.
-     */
     ZYDIS_CPUFLAG_VM,
-    /**
-     * @brief   Alignment check.
-     */
     ZYDIS_CPUFLAG_AC,
-    /**
-     * @brief   Virtual interrupt flag.
-     */
     ZYDIS_CPUFLAG_VIF,
-    /**
-     * @brief   Virtual interrupt pending.
-     */
     ZYDIS_CPUFLAG_VIP,
-    /**
-     * @brief   Able to use CPUID instruction.
-     */
     ZYDIS_CPUFLAG_ID,
-    /**
-     * @brief   FPU condition-code flag 0.
-     */
     ZYDIS_CPUFLAG_C0,
-    /**
-     * @brief   FPU condition-code flag 1.
-     */
     ZYDIS_CPUFLAG_C1,
-    /**
-     * @brief   FPU condition-code flag 2.
-     */
     ZYDIS_CPUFLAG_C2,
-    /**
-     * @brief   FPU condition-code flag 3.
-     */
     ZYDIS_CPUFLAG_C3,
 
-    /**
-     * @brief   Maximum value of this enum.
-     */
+
     ZYDIS_CPUFLAG_MAX_VALUE = ZYDIS_CPUFLAG_C3
 };
 ]]
 
 ffi.cdef[[
-/**
- * @brief   Defines the @c ZydisCPUFlagAction datatype.
- */
+
 typedef ZydisU8 ZydisCPUFlagAction;
 
-/**
- * @brief   Values that represent CPU-flag actions.
- */
+
 enum ZydisCPUFlagActions
 {
-    /**
-     * @brief   The CPU flag is not touched by the instruction.
-     */
     ZYDIS_CPUFLAG_ACTION_NONE,
-    /**
-     * @brief   The CPU flag is tested (read).
-     */
     ZYDIS_CPUFLAG_ACTION_TESTED,
-    /**
-     * @brief   The CPU flag is tested and modified aferwards (read-write).
-     */
     ZYDIS_CPUFLAG_ACTION_TESTED_MODIFIED,
-    /**
-     * @brief   The CPU flag is modified (write).
-     */
     ZYDIS_CPUFLAG_ACTION_MODIFIED,
-    /**
-     * @brief   The CPU flag is set to 0 (write).
-     */
     ZYDIS_CPUFLAG_ACTION_SET_0,
-    /**
-     * @brief   The CPU flag is set to 1 (write).
-     */
     ZYDIS_CPUFLAG_ACTION_SET_1,
-    /**
-     * @brief   The CPU flag is undefined (write).
-     */
     ZYDIS_CPUFLAG_ACTION_UNDEFINED,
 
-    /**
-     * @brief   Maximum value of this enum.
-     */
     ZYDIS_CPUFLAG_ACTION_MAX_VALUE = ZYDIS_CPUFLAG_ACTION_UNDEFINED
 };
 ]]
 
 ffi.cdef[[
-/**
- * @brief   Defines the @c ZydisExceptionClass datatype.
- */
 typedef ZydisU8 ZydisExceptionClass;
 
-/**
- * @brief   Values that represent exception-classes.
- */
 enum ZydisExceptionClasses
 {
     ZYDIS_EXCEPTION_CLASS_NONE,
@@ -444,9 +298,6 @@ enum ZydisExceptionClasses
     ZYDIS_EXCEPTION_CLASS_K20,
     ZYDIS_EXCEPTION_CLASS_K21,
 
-    /**
-     * @brief   Maximum value of this enum.
-     */
     ZYDIS_EXCEPTION_CLASS_MAX_VALUE = ZYDIS_EXCEPTION_CLASS_K21
 };
 ]]
@@ -461,9 +312,6 @@ enum ZydisVectorLengths
     ZYDIS_VECTOR_LENGTH_256     = 256,
     ZYDIS_VECTOR_LENGTH_512     = 512,
 
-    /**
-     * @brief   Maximum value of this enum.
-     */
     ZYDIS_VECTOR_LENGTH_MAX_VALUE = ZYDIS_VECTOR_LENGTH_512
 };
 ]]
@@ -478,14 +326,12 @@ enum ZydisMaskModes
     ZYDIS_MASK_MODE_MERGE,
     ZYDIS_MASK_MODE_ZERO,
 
-
     ZYDIS_MASK_MODE_MAX_VALUE = ZYDIS_MASK_MODE_ZERO
 };
 ]]
 
 ffi.cdef[[
 typedef ZydisU8 ZydisBroadcastMode;
-
 
 enum ZydisBroadcastModes
 {
@@ -503,15 +349,12 @@ enum ZydisBroadcastModes
     ZYDIS_BROADCAST_MODE_4_TO_16,
     ZYDIS_BROADCAST_MODE_8_TO_16,
 
-
     ZYDIS_BROADCAST_MODE_MAX_VALUE = ZYDIS_BROADCAST_MODE_8_TO_16
 };
 ]]
 
 ffi.cdef[[
-
 typedef ZydisU8 ZydisRoundingMode;
-
 
 enum ZydisRoundingModes
 {
@@ -521,15 +364,12 @@ enum ZydisRoundingModes
     ZYDIS_ROUNDING_MODE_RU,
     ZYDIS_ROUNDING_MODE_RZ,
 
-
     ZYDIS_ROUNDING_MODE_MAX_VALUE = ZYDIS_ROUNDING_MODE_RZ
 };
 ]]
 
 ffi.cdef[[
-
 typedef ZydisU8 ZydisSwizzleMode;
-
 
 enum ZydisSwizzleModes
 {
@@ -567,33 +407,19 @@ enum ZydisConversionModes
 ffi.cdef[[
  typedef struct ZydisDecodedInstruction_
  {
-
      ZydisMachineMode machineMode;
-
      ZydisMnemonic mnemonic;
-
      ZydisU8 length;
-
      ZydisU8 data[ZYDIS_MAX_INSTRUCTION_LENGTH];
-
      ZydisInstructionEncoding encoding;
-
      ZydisOpcodeMap opcodeMap;
-
      ZydisU8 opcode;
-
      ZydisU8 stackWidth;
-
      ZydisU8 operandWidth;
-
      ZydisU8 addressWidth;
-
      ZydisU8 operandCount;
-
      ZydisDecodedOperand operands[ZYDIS_MAX_OPERAND_COUNT];
-
      ZydisInstructionAttributes attributes;
-
      ZydisU64 instrAddress;
 
      struct
@@ -603,7 +429,6 @@ ffi.cdef[[
 
      struct
      {
-
          ZydisVectorLength vectorLength;
 
          struct
@@ -768,9 +593,7 @@ ffi.cdef[[
 
          struct
          {
-
              ZydisBool isSigned;
-
              ZydisBool isRelative;
 
              union
@@ -780,7 +603,6 @@ ffi.cdef[[
              } value;
 
              ZydisU8 size;
-
              ZydisU8 offset;
          } imm[2];
      } raw;
