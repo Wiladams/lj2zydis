@@ -13,97 +13,12 @@ local bit = require("bit")
 local namespace = require("lj2zydis.namespace")()
 
 local zydis = require("lj2zydis.zydis")
-local enum = require("lj2zydis.enum")
+local ZydisEnum = require("ZydisEnum")
+
 enum.inject(zydis, namespace)
+enum.inject(ZydisEnums, namespace)
 
 
-local operandTypes = enum
-{
-    [0] = "UNUSED",
-    "REGISTER",
-    "MEMORY",
-    "POINTER",
-    "IMMEDIATE"
-};
-
-local operandVisibilities = enum
-{
-    [0] = "INVALID",
-    "EXPLICIT",
-    "IMPLICIT",
-    "HIDDEN"
-};
-
-local operandActions = enum
-{
-    [0] = "INV",
-    "R",
-    "W",
-    "RW",
-    "CR",
-    "CW",
-    "RCW",
-    "CRW"
-};
-
-local elementTypes = enum
-{
-    [0] = "INVALID",
-    "STRUCT",
-    "UINT",
-    "INT",
-    "FLOAT16",
-    "FLOAT32",
-    "FLOAT64",
-    "FLOAT80",
-    "LONGBCD"
-};
-
-local operandEncodings = enum
-{
-    [0] = "NONE",
-    "MODRM_REG",
-    "MODRM_RM",
-    "OPCODE",
-    "NDSNDD",
-    "IS4",
-    "MASK",
-    "DISP8",
-    "DISP16",
-    "DISP32",
-    "DISP64",
-    "DISP16_32_64",
-    "DISP32_32_64",
-    "DISP16_32_32",
-    "UIMM8",
-    "UIMM16",
-    "UIMM32",
-    "UIMM64",
-    "UIMM16_32_64",
-    "UIMM32_32_64",
-    "UIMM16_32_32",
-    "SIMM8",
-    "SIMM16",
-    "SIMM32",
-    "SIMM64",
-    "SIMM16_32_64",
-    "SIMM32_32_64",
-    "SIMM16_32_32",
-    "JIMM8",
-    "JIMM16",
-    "JIMM32",
-    "JIMM64",
-    "JIMM16_32_64",
-    "JIMM32_32_64",
-    "JIMM16_32_32"
-};
-
-local memopTypes = enum {
-    [0] = "INVALID",
-    "MEM",
-    "AGEN",
-    "MIB"
-};
 
 --[[
 /* ============================================================================================== */
@@ -112,29 +27,7 @@ local memopTypes = enum {
 --]]
 
 local function ZydisFormatStatus(status)
-
-    local strings =
-    {
-        [0] = "SUCCESS",
-        "INVALID_PARAMETER",
-        "INVALID_OPERATION",
-        "INSUFFICIENT_BUFFER_SIZE",
-        "NO_MORE_DATA",
-        "DECODING_ERROR",
-        "INSTRUCTION_TOO_LONG",
-        "BAD_REGISTER",
-        "ILLEGAL_LOCK",
-        "ILLEGAL_LEGACY_PFX",
-        "ILLEGAL_REX",
-        "INVALID_MAP",
-        "MALFORMED_EVEX",
-        "MALFORMED_MVEX",
-        "INVALID_MASK",
-        "IMPOSSIBLE_INSTRUCTION",
-        "INSUFFICIENT_BUFFER_SIZE"
-    };
-    
-    return strings[status];
+    return StatusStrings[status];
 end
 
 --[[
@@ -149,7 +42,7 @@ local function printf(fmt, ...)
     io.write(string.format(fmt,...))
     return true;
 end
---[=[
+
 local function printOperands(instruction)
 
     fputs("== [ OPERANDS ] =====================================================", stdout);
@@ -173,13 +66,11 @@ local function printOperands(instruction)
             instruction.operands[i].elementCount,
             instruction.operands[i].elementSize,
             elementTypes[instruction.operands[i].elementType]);
-
-        switch (instruction.operands[i].type)
-        {
-        case ZYDIS_OPERAND_TYPE_REGISTER:
+--[[
+        local kind = instruction.operands[i].type
+        if kind == ZYDIS_OPERAND_TYPE_REGISTER then
             printf("  %27s", ZydisRegisterGetString(instruction.operands[i].reg.value));
-            break;
-        case ZYDIS_OPERAND_TYPE_MEMORY:
+        elseif kind == ZYDIS_OPERAND_TYPE_MEMORY then
             printf("  TYPE  =%20s\n", memopTypes[instruction.operands[i].mem.type]);
             printf("  %84s =%20s\n",
                 "SEG  ", ZydisRegisterGetString(instruction.operands[i].mem.segment));
@@ -190,77 +81,44 @@ local function printOperands(instruction)
             printf("  %84s =%20d\n", "SCALE", instruction.operands[i].mem.scale);
             printf("  %84s =  0x%016"PRIX64,
                 "DISP ", instruction.operands[i].mem.disp.value);
-            break;
-        case ZYDIS_OPERAND_TYPE_POINTER:
-            break;
-        case ZYDIS_OPERAND_TYPE_IMMEDIATE:
-            if (instruction.operands[i].imm.isSigned)
-            {
-                printf("  (%s %s %2d) 0x%016" PRIX64,
+
+        elseif kind == ZYDIS_OPERAND_TYPE_POINTER then
+            -- do nothing break;
+        elseif kind == ZYDIS_OPERAND_TYPE_IMMEDIATE then
+            if (instruction.operands[i].imm.isSigned ~= 0) then
+            
+                printf("  (%s %s %2d) 0x%016",
                     instruction.operands[i].imm.isSigned ? "S" : "U",
                     instruction.operands[i].imm.isRelative ? "R" : "_",
                     instruction.raw.imm[immId].size,
                     instruction.operands[i].imm.value.s);
-            } else
-            {
+            else
                 printf("  SIGN  =%20s\n", instruction.operands[i].imm.isSigned ? "Y" : "N");
                 printf("  %84s =%20s\n",
                     "REL  ", instruction.operands[i].imm.isRelative ? "Y" : "N");
                 printf("  %84s =                  %2d\n",
                     "SIZE ", instruction.raw.imm[immId].size);
-                printf("  %84s =  0x%016" PRIX64,
+                printf("  %84s =  0x%016",
                     "VALUE", instruction.operands[i].imm.value.u);
-            }
-            ++immId;
-            break;
+            end
+            immId = immId + 1;
+
         else
             -- ZYDIS_UNREACHABLE;
         end
+--]]
         puts("");
         i = i+1;
     end
+    
     fputs("--  ---------  ----------  ------  ------------   ----  -----  ------", stdout);
     fputs("  --------  ---------------------------\n", stdout);
 end
---]=]
+
 
 local function printFlags(instruction)
 
-    local flagNames =
-    {
-        [0] = "CF",
-        "PF",
-        "AF",
-        "ZF",
-        "SF",
-        "TF",
-        "IF",
-        "DF",
-        "OF",
-        "IOPL",
-        "NT",
-        "RF",
-        "VM",
-        "AC",
-        "VIF",
-        "VIP",
-        "ID",
-        "C0",
-        "C1",
-        "C2",
-        "C3"
-    };
 
-    local  flagActions =
-    {
-        [0] = "   ",
-        "T  ",
-        "T_M",
-        "M  ",
-        "0  ",
-        "1  ",
-        "U  "
-    };
 
     fputs("== [    FLAGS ] =====================================================", stdout);
     fputs("=======================================\n", stdout);
@@ -303,61 +161,7 @@ end
 --[=[
 local function printAVXInfo(instruction)
 
-    local broadcastStrings =
-    {
-        [0] = "NONE",
-        "1_TO_2",
-        "1_TO_4",
-        "1_TO_8",
-        "1_TO_16",
-        "1_TO_32",
-        "1_TO_64",
-        "2_TO_4",
-        "2_TO_8",
-        "2_TO_16",
-        "4_TO_8",
-        "4_TO_16",
-        "8_TO_16"
-    };
 
-    local maskModeStrings =
-    {
-        [0] = "NONE",
-        "MERGE",
-        "ZERO"
-    };
-
-    local roundingModeStrings =
-    {
-        [0] = "DEFAULT",
-        "RN",
-        "RD",
-        "RU",
-        "RZ"
-    };
-
-    local swizzleModeStrings =
-    {
-        [0] = "NONE",
-        "DCBA",
-        "CDAB",
-        "BADC",
-        "DACB",
-        "AAAA",
-        "BBBB",
-        "CCCC",
-        "DDDD"
-    };
-
-    static const char* conversionModeStrings[] =
-    {
-        [0] = "NONE",
-        "FLOAT16",
-        "SINT8",
-        "UINT8",
-        "SINT16",
-        "UINT16"
-    };
 
     fputs("== [      AVX ] =====================================================", stdout);
     fputs("=======================================\n", stdout);
@@ -388,83 +192,14 @@ local function printAVXInfo(instruction)
     }
     puts("");
 }
+--]=]
 
-void printInstruction(ZydisDecodedInstruction* instruction)
-{
-    static const char* opcodeMapStrings[] =
-    {
-        [0] = "DEFAULT",
-        "0F",
-        "0F38",
-        "0F3A",
-        "0F0F",
-        "XOP8",
-        "XOP9",
-        "XOPA"
-    };
+local function printInstruction(instruction)
 
-    static const char* instructionEncodingStrings[] =
-    {
-        [0] = "",
-        "DEFAULT",
-        "3DNOW",
-        "XOP",
-        "VEX",
-        "EVEX",
-        "MVEX"
-    };
 
-    static const char* exceptionClassStrings[] =
+    local attributeMap =
     {
-        [0] = "NONE",
-        "SSE1",
-        "SSE2",
-        "SSE3",
-        "SSE4",
-        "SSE5",
-        "SSE7",
-        "AVX1",
-        "AVX2",
-        "AVX3",
-        "AVX4",
-        "AVX5",
-        "AVX6",
-        "AVX7",
-        "AVX8",
-        "AVX11",
-        "AVX12",
-        "E1",
-        "E1NF",
-        "E2",
-        "E2NF",
-        "E3",
-        "E3NF",
-        "E4",
-        "E4NF",
-        "E5",
-        "E5NF",
-        "E6",
-        "E6NF",
-        "E7NM",
-        "E7NM128",
-        "E9NF",
-        "E10",
-        "E10NF",
-        "E11",
-        "E11NF",
-        "E12",
-        "E12NP",
-        "K20",
-        "K21"
-    };
-
-    struct
-    {
-        ZydisInstructionAttributes attrMask;
-        const char* str;
-    } attributeMap[] =
-    {
-        { ZYDIS_ATTRIB_HAS_MODRM,                "HAS_MODRM"                },
+        [0] = { ZYDIS_ATTRIB_HAS_MODRM,          "HAS_MODRM"                },
         { ZYDIS_ATTRIB_HAS_SIB,                  "HAS_SIB"                  },
         { ZYDIS_ATTRIB_HAS_REX,                  "HAS_REX"                  },
         { ZYDIS_ATTRIB_HAS_XOP,                  "HAS_XOP"                  },
@@ -576,7 +311,7 @@ void printInstruction(ZydisDecodedInstruction* instruction)
     fputs("=======================================\n", stdout);
     printf("  %s\n", &buffer[0]);
 }
---]=]
+
 
 --[[
 /* ============================================================================================== */
@@ -665,7 +400,7 @@ local function main()
         return status;
     }
 
-    printInstruction(&instruction);
+    printInstruction(instruction);
 --]=]
     return true;
 end
